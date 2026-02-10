@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Only For You ❤️</title>
+
+<style>
+* { box-sizing: border-box; }
+
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    overflow: hidden;
+    color: white;
+}
+
+/* BACKGROUND */
+.bg {
+    position: fixed;
+    inset: 0;
+    background: url('us.jpg') center/cover no-repeat;
+    filter: blur(3px) brightness(0.75);
+    transform: scale(1.1);
+    z-index: -2;
+}
+
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: -1;
+}
+
+/* CARD */
+.card {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 420px;
+    padding: 30px 25px;
+    text-align: center;
+    background: rgba(255,255,255,0.25);
+    backdrop-filter: blur(12px);
+    border-radius: 20px;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.3);
+}
+
+h1 {
+    color: #ff4d6d;
+    font-size: 2rem;
+    margin-bottom: 15px;
+}
+
+p {
+    font-size: 1.1rem;
+    line-height: 1.5;
+}
+
+/* INPUT & BUTTONS */
+input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 25px;
+    border: none;
+    font-size: 1rem;
+    text-align: center;
+    margin-top: 15px;
+}
+
+button {
+    padding: 12px 26px;
+    font-size: 1.1rem;
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+    margin: 10px;
+}
+
+.primary {
+    background: #ff4d6d;
+    color: white;
+}
+
+.secondary {
+    background: white;
+    color: #ff4d6d;
+}
+
+/* HEARTS */
+.heart {
+    position: absolute;
+    top: -20px;
+    font-size: 18px;
+    animation: fall linear forwards;
+    user-select: none;
+}
+
+@keyframes fall {
+    to {
+        transform: translateY(110vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="bg"></div>
+<div class="overlay"></div>
+
+<div class="card" id="card"></div>
+
+<audio id="music" loop>
+    <source src="song.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+// ❤️ HEART RAIN
+function createHeart() {
+    const heart = document.createElement("div");
+    heart.className = "heart";
+    heart.innerHTML = ["❤️","💖","💕","💘"][Math.floor(Math.random()*4)];
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.fontSize = Math.random() * 18 + 12 + "px";
+    heart.style.animationDuration = Math.random() * 3 + 3 + "s";
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 6000);
+}
+setInterval(createHeart, 350);
+
+// 💌 SCREENS
+const card = document.getElementById("card");
+
+// 1️⃣ PASSWORD SCREEN
+card.innerHTML = `
+<h1>Private 💌</h1>
+<p>Only one person is allowed here…</p>
+<input type="password" id="pass" placeholder="Enter our secret">
+<button class="primary" onclick="checkPass()">Enter ❤️</button>
+`;
+
+function checkPass() {
+    const pass = document.getElementById("pass").value.toLowerCase();
+    if (pass === "27-12-2023") {   // 🔐 CHANGE THIS PASSWORD
+        countdown();
+    } else {
+        alert("Hmm… that’s not it 😏");
+    }
+}
+
+// 2️⃣ COUNTDOWN
+function countdown() {
+    let count = 3;
+    card.innerHTML = `<h1>${count}</h1><p>Get ready…</p>`;
+    const timer = setInterval(() => {
+        count--;
+        if (count === 0) {
+            clearInterval(timer);
+            proposal();
+        } else {
+            card.innerHTML = `<h1>${count}</h1><p>Get ready…</p>`;
+        }
+    }, 1000);
+}
+
+// 3️⃣ PROPOSAL
+function proposal() {
+    card.innerHTML = `
+    <h1 id="question"></h1>
+    <p>I made this because you matter to me more than words ❤️</p>
+    <div>
+        <button class="primary" onclick="yes()">Yes 💖</button>
+        <button class="secondary" id="no">No 🙄</button>
+    </div>
+    `;
+    typeText("Will you be my Valentine?", "question");
+
+    const noBtn = document.getElementById("no");
+    noBtn.addEventListener("touchstart", moveNo);
+    noBtn.addEventListener("mouseover", moveNo);
+}
+
+// 🖋️ TYPE EFFECT
+function typeText(text, id) {
+    let i = 0;
+    const el = document.getElementById(id);
+    const speed = 90;
+    function typing() {
+        if (i < text.length) {
+            el.innerHTML += text.charAt(i);
+            i++;
+            setTimeout(typing, speed);
+        }
+    }
+    typing();
+}
+
+// 😏 NO BUTTON ESCAPE
+function moveNo() {
+    const x = Math.random() * (window.innerWidth - 100);
+    const y = Math.random() * (window.innerHeight - 100);
+    this.style.position = "absolute";
+    this.style.left = x + "px";
+    this.style.top = y + "px";
+}
+
+// 💍 YES ENDING
+function yes() {
+    document.getElementById("music").play();
+    card.innerHTML = `
+    <h1>YAYYYY 💍❤️</h1>
+    <p>
+        From our laughs, our talks, and every little moment…<br><br>
+        I choose you. Today, tomorrow, always 💕
+    </p>
+    `;
+}
+</script>
+
+</body>
+</html>
